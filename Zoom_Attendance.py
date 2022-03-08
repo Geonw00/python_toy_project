@@ -40,6 +40,7 @@ strtest = """
 
 """
 
+# 쉬는 시간 계산
 def break_time(break_time):
     # 현재 시간
     global commandDict
@@ -53,7 +54,8 @@ def break_time(break_time):
     keyboard.write(f"""{afterTime.time()}까지 놀아보자아아~!!\n{strtest}""")
     keyboard.press('enter')
     commandDict['!쉬는시간'] = f'{afterTime.time()}'
-            
+
+# 명령 인식
 def command_func(command):
     if command[0:5] == '@쉬는시간':
         n_list = command.split("@쉬는시간")
@@ -81,10 +83,10 @@ def command_func(command):
         keyboard.write(commandDict[command])
         keyboard.press('enter')
 
-
+# 채팅시간비교
 def checkTime(chatTime):
     
-    # 00시00분00초가 한줄로 연결된 현재 시간 문자열
+    # 현재 시간 문자열 (HH:MM:SS)
     realTime = datetime.datetime.strptime(time.strftime('%H:%M:%S'),"%H:%M:%S")
     inTime = datetime.datetime.strptime(chatTime,"%H:%M:%S")
     timeDiff = abs(realTime - inTime)
@@ -96,11 +98,13 @@ def checkTime(chatTime):
     else:
         return True
 
+# 사용할 txt path지정
 def search_zoom_path():
     filename = os.listdir(zoom_path)
     global chat_path
     chat_path = zoom_path +"/"+filename[len(filename) - 1] +"/"+chat_file
-    
+
+# 메인
 def get_png_location():
     print('Start')
     global afterTime
