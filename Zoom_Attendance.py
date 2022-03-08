@@ -10,7 +10,7 @@ img_path = "C:/Users/USER/Desktop/02.python/mini/Py_Project/Zoom_Attendance/img/
 chat_file = "meeting_saved_chat.txt" # default chat file name
 str = time.strftime('%H%M%S') # 00시00분00초가 한줄로 연결된 현재 시간 문자열
 hilist=['반가워요~!!','좋은 하루 입니다!', '안녕하세요 ?']
-eduDict= {'10' : '[Python]Web Scraping', '11' : '[Python]Web Scraping', '14' : '[Python]Numpy / Pandas', '15' : '[Python]Numpy / Pandas', '16':'[Python]확률과 확률분포','17':'[Python]회귀분석','18':'[머신러닝]머신러닝 개요',\
+eduDict= {'08' : '[RPA]미니프로젝트 발표!','10' : '[Python]Web Scraping', '11' : '[Python]Web Scraping', '14' : '[Python]Numpy / Pandas', '15' : '[Python]Numpy / Pandas', '16':'[Python]확률과 확률분포','17':'[Python]회귀분석','18':'[머신러닝]머신러닝 개요',\
 '21':'[머신러닝]데이터 전처리, 데이터셋 나누기','22':'[머신러닝]분류 알고리즘','23':'[머신러닝]분류 알고리즘','24':'[머신러닝]경사하강법과 최적화','25':'[머신러닝]회귀 알고리즘','28':'[머신러닝]비지도학습','29':'[딥러닝]딥러닝 개요','30':'[딥러닝]MLP','31':'[딥러닝]과적합 방지를 위한 Dropout, BatchNormalization 등 기법',\
 '01':'[딥러닝]CNN','02':'[딥러닝]Transfer Learning 개요','04':'[딥러닝]Tensorflow 모델구현의 다양한 방법 – functional, subclass방식','05':'[딥러닝]RNN'}
 commandDict = {'!사용법': '##### 7팀 미니챗봇 사용법 #####\n\
@@ -28,7 +28,17 @@ commandDict = {'!사용법': '##### 7팀 미니챗봇 사용법 #####\n\
 '!안녕' : 'default value',
 '!수업내용' : 'default value'}
 afterTime = datetime.datetime.strptime('23:59:59',"%H:%M:%S")
+strtest = """
+＼＿＿＿＿＿＿＿＿＿＿／
+　　ｏ
+　　 。
+　　　｡
+　　∧＿∧
+　 (*　･ω･)
+＿(__つ/￣￣￣/_
+　　＼/　　　/
 
+"""
 
 def break_time(break_time):
     # 현재 시간
@@ -40,23 +50,7 @@ def break_time(break_time):
     afterTime = realTime + datetime.timedelta(minutes=int(break_time))
     print('break_time call', afterTime.time(), "까지 놀아보자아아잇")
     pag.click(pag.locateCenterOnScreen(zoom_chat_window))
-    keyboard.write(f'''{afterTime}까지 놀아보자아아~!!.\n\
-        ⊂_ヽ
-        　 ＼＼ Λ＿Λ
-        　　 ＼(　ˇωˇ)
-        　　　 >　⌒ヽ
-        　　　/ 　 へ＼
-        　　 /　　/　＼＼
-        　　 ﾚ　ノ　　 ヽ_つ
-        　　/　/
-        　 /　/|
-        　(　(ヽ
-        　|　|、＼
-        　| 丿 ＼ ⌒)
-        　| |　　) /
-        `ノ )　　Lﾉ
-        (_／
-        ''')
+    keyboard.write(f"""{afterTime.time()}까지 놀아보자아아~!!\n{strtest}""")
     keyboard.press('enter')
     commandDict['!쉬는시간'] = f'{afterTime.time()}'
             
@@ -94,7 +88,7 @@ def checkTime(chatTime):
     inTime = datetime.datetime.strptime(chatTime,"%H:%M:%S")
     timeDiff = abs(realTime - inTime)
     
-    if timeDiff.seconds > 10:
+    if timeDiff.seconds > 15:
         return False
     
     else:
@@ -106,6 +100,7 @@ def search_zoom_path():
     chat_path = zoom_path +"/"+filename[len(filename) - 1] +"/"+chat_file
     
 def get_png_location():
+    print('Start')
     global afterTime
     rer = datetime.datetime.strptime(time.strftime('%H:%M:%S'),"%H:%M:%S")
     
@@ -128,56 +123,49 @@ def get_png_location():
             ''')
         keyboard.press('enter')
         commandDict['!쉬는시간'] = '23:59:59'
+        afterTime = datetime.datetime.strptime('23:59:59',"%H:%M:%S")
 
-        # 대화 파일을 저장 하고 파일을 불러온다.
-        location1 = pag.locateOnScreen(f'{img_path}save_img.PNG')
+    # 대화 파일을 저장 하고 파일을 불러온다.
+    location1 = pag.locateOnScreen(f'{img_path}save_img.PNG')
+    
+    if location1 == None:
+        print('줌 화면 대화창을 찾지 못했습니다.')
+        return
+            
+    else:
+        location = pag.locateOnScreen(f'{img_path}save_img.PNG')
+    pag.click(location)
+    print('저장 전 버튼 클릭')
+    location = pag.locateCenterOnScreen(f'{img_path}save_img_button.PNG')
+    
+    if location == None:
+        print('저장버튼을 찾지 못했습니다.')
+        return
         
-        if location1 == None:
-            location_mac = pag.locateOnScreen(f'{img_path}save_img_mac.PNG')
-            
-            if location_mac == None:
-                print('줌 화면 대화창을 찾지 못했습니다.')
-            
-            else:
-                location = pag.locateOnScreen(f'{img_path}save_img_mac.PNG')
-                
-        else:
-            location = pag.locateOnScreen(f'{img_path}save_img.PNG')
-        pag.click(location)
-        print('저장 전 버튼 클릭')
-        time.sleep(2)
-        location = pag.locateCenterOnScreen(f'{img_path}save_img_button.PNG')
-        
-        if location == None:
-            location = pag.locateCenterOnScreen(f'{img_path}save_img_button_mac.PNG')
-            
-            if location == None:
-                print('저장버튼을 찾지 못했습니다.')
-            
-        pag.click(location)
-        print('저장버튼 클릭')
-        search_zoom_path() # 채팅 저장파일 경로 변수에 저장하는 함수.
-        inText = []
-        with open (chat_path, 'r', encoding='utf-8') as f:
-            allText = f.readlines()
-            count = 0
-            for i in allText[::-1]:       
-                if count % 2 == 1 and checkTime(i.split(' ')[0]) == False:
+    pag.click(location)
+    print('저장버튼 클릭')
+    search_zoom_path() # 채팅 저장파일 경로 변수에 저장하는 함수.
+    inText = []
+    with open (chat_path, 'r', encoding='utf-8') as f:
+        allText = f.readlines()
+        for i in allText[::-1]:       
+            if re.match('\d{2}:\d{2}:\d{2}\s발신자\s\w+\s\w+\s\w+:', i) != None and checkTime(i.split(' ')[0]) == False:
+                if len(inText) != 0:
                     del inText[len(inText)-1]
-                    break
-                
-                elif count % 2 == 0:
-                    clnText = re.sub('\t|\n|\s', '', i)
+                break
+
+            elif re.match('\d{2}:\d{2}:\d{2}\s발신자\s\w+\s\w+\s\w+:', i) == None:
+                clnText = re.sub('\t|\n|\s', '', i)
+                if clnText.startswith('@') or clnText.startswith('!'):
                     inText.append(clnText)
-                count += 1
-        
-        if len(inText) > 10:
-            pag.click(pag.locateCenterOnScreen(zoom_chat_window))
-            keyboard.write('명령이 너무 많습니다.')
-            keyboard.press('enter')
-        else:    
-            for i in inText[::-1]:
-                command_func(i)
+    
+    if len(inText) > 10:
+        pag.click(pag.locateCenterOnScreen(zoom_chat_window))
+        keyboard.write('명령이 너무 많습니다. 😮‍💨')
+        keyboard.press('enter')
+    else:    
+        for i in inText[::-1]:
+            command_func(i)
             
 if __name__ == '__main__':
     nowDate = time.strftime('%d')
