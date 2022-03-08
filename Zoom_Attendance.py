@@ -81,6 +81,7 @@ def command_func(command):
         keyboard.write(commandDict[command])
         keyboard.press('enter')
 
+
 def checkTime(chatTime):
     
     # 00시00분00초가 한줄로 연결된 현재 시간 문자열
@@ -88,6 +89,7 @@ def checkTime(chatTime):
     inTime = datetime.datetime.strptime(chatTime,"%H:%M:%S")
     timeDiff = abs(realTime - inTime)
     
+    # 현재시간과 15초 이상 차이날 경우 False 반환
     if timeDiff.seconds > 15:
         return False
     
@@ -147,7 +149,10 @@ def get_png_location():
     search_zoom_path() # 채팅 저장파일 경로 변수에 저장하는 함수.
     inText = []
     with open (chat_path, 'r', encoding='utf-8') as f:
-        allText = f.readlines()
+        allText = f.readlines() 
+        # 10:12:40 발신자 XXX 수신자 모두에게:
+        # 채팅내용
+        # 위와 같은 형식 반복
         for i in allText[::-1]:       
             if re.match('\d{2}:\d{2}:\d{2}\s발신자\s\w+\s\w+\s\w+:', i) != None and checkTime(i.split(' ')[0]) == False:
                 if len(inText) != 0:
@@ -155,7 +160,7 @@ def get_png_location():
                 break
 
             elif re.match('\d{2}:\d{2}:\d{2}\s발신자\s\w+\s\w+\s\w+:', i) == None:
-                clnText = re.sub('\t|\n|\s', '', i)
+                clnText = re.sub('\t|\n|\s', '', i) # '\t채팅내용\n' => '채팅내용'
                 if clnText.startswith('@') or clnText.startswith('!'):
                     inText.append(clnText)
     
