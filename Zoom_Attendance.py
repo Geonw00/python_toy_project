@@ -26,7 +26,8 @@ commandDict = {'!사용법': '##### 7팀 미니챗봇 사용법 #####\n\
 '!쉬는시간' : '00:00:00',
 '!박태준' : '박태준! 박태준! 박태준! 박태준! 박태준! 박태준!',
 '!안녕' : 'default value',
-'!수업내용' : 'default value'}
+'!수업내용' : 'default value',
+'!발표' : 'https://www.miricanvas.com/v/1xhci6'}
 afterTime = datetime.datetime.strptime('23:59:59',"%H:%M:%S")
 strtest = """
 ＼＿＿＿＿＿＿＿＿＿＿／
@@ -88,7 +89,7 @@ def checkTime(chatTime):
     inTime = datetime.datetime.strptime(chatTime,"%H:%M:%S")
     timeDiff = abs(realTime - inTime)
     
-    if timeDiff.seconds > 15:
+    if timeDiff.seconds > 10:
         return False
     
     else:
@@ -146,6 +147,7 @@ def get_png_location():
     print('저장버튼 클릭')
     search_zoom_path() # 채팅 저장파일 경로 변수에 저장하는 함수.
     inText = []
+    inTextCom = []
     with open (chat_path, 'r', encoding='utf-8') as f:
         allText = f.readlines()
         for i in allText[::-1]:       
@@ -156,15 +158,20 @@ def get_png_location():
 
             elif re.match('\d{2}:\d{2}:\d{2}\s발신자\s\w+\s\w+\s\w+:', i) == None:
                 clnText = re.sub('\t|\n|\s', '', i)
-                if clnText.startswith('@') or clnText.startswith('!'):
-                    inText.append(clnText)
+                inText.append(clnText)
     
-    if len(inText) > 10:
+    for i in inText:            
+        if i.startswith('@') or i.startswith('!'):
+            inTextCom.append(i)
+    
+    if len(inTextCom) > 10:
         pag.click(pag.locateCenterOnScreen(zoom_chat_window))
         keyboard.write('명령이 너무 많습니다. 😮‍💨')
         keyboard.press('enter')
-    else:    
-        for i in inText[::-1]:
+    else:
+        print(inTextCom)    
+        for i in inTextCom[::-1]:
+            print(i, '실행')
             command_func(i)
             
 if __name__ == '__main__':
